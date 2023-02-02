@@ -52,7 +52,7 @@ resource "aws_subnet" "Altschool-project-public-subnet1" {
   vpc_id                  = aws_vpc.Altschool-project-vpc.id
   cidr_block              = "10.0.1.0/24"
   map_public_ip_on_launch = true
-  availability_zone       = "us-east-1"
+  availability_zone       = "us-east-1a"
   tags = {
     Name = "Altschool-project-public-subnet1"
   }
@@ -62,12 +62,22 @@ resource "aws_subnet" "Altschool-project-public-subnet2" {
   vpc_id                  = aws_vpc.Altschool-project-vpc.id
   cidr_block              = "10.0.2.0/24"
   map_public_ip_on_launch = true
-  availability_zone       = "us-east-1"
+  availability_zone       = "us-east-1b"
   tags = {
     Name = "Altschool-project-public-subnet2"
   }
 }
 
+# Creating Public Subnet-3
+resource "aws_subnet" "Altschool-project-private-subnet3" {
+  vpc_id                  = aws_vpc.Altschool-project-vpc.id
+  cidr_block              = "10.0.3.0/24"
+  map_public_ip_on_launch = false
+  availability_zone       = "us-east-1c"
+  tags = {
+    Name = "Altschool-project-private-subnet3"
+  }
+}
 resource "aws_network_acl" "Altschool-network_acl" {
   vpc_id     = aws_vpc.Altschool-project-vpc.id
   subnet_ids = [aws_subnet.Altschool-project-public-subnet1.id, aws_subnet.Altschool-project-public-subnet2.id]
