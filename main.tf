@@ -178,7 +178,7 @@ resource "aws_instance" "Altschool1" {
   key_name        = "root-server2-london"
   security_groups = [aws_security_group.Altschool-security-grp-rule.id]
   subnet_id       = aws_subnet.Altschool-project-public-subnet1.id
-  availability_zone = "us-east-1"
+  availability_zone = "us-east-1a"
   tags = {
     Name   = "Altschool-1"
     source = "terraform"
@@ -193,7 +193,7 @@ resource "aws_instance" "Altschool1" {
   key_name        = "root-server2-london"
   security_groups = [aws_security_group.Altschool-security-grp-rule.id]
   subnet_id       = aws_subnet.Altschool-project-public-subnet2.id
-  availability_zone = "us-east-1"
+  availability_zone = "us-east-1b"
   tags = {
     Name   = "Altschool-2"
     source = "terraform"
@@ -208,7 +208,7 @@ resource "aws_instance" "Altschool3" {
   key_name        = "root-server2-london"
   security_groups = [aws_security_group.Altschool-security-grp-rule.id]
   subnet_id       = aws_subnet.Altschool-project-public-subnet1.id
-  availability_zone = "us-east-1"
+  availability_zone = "us-east-1a"
   tags = {
     Name   = "Altschool-3"
     source = "terraform"
