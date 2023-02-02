@@ -173,7 +173,7 @@ resource "aws_security_group" "Altschool-security-grp-rule" {
 # creating instance 1
 
 resource "aws_instance" "Altschool1" {
-  ami             = "ami-01b8d743224353ffe"
+  ami             = "ami-0aa7d40eeae50c9a9"
   instance_type   = "t2.micro"
   key_name        = "root-server2-london"
   security_groups = [aws_security_group.Altschool-security-grp-rule.id]
@@ -188,7 +188,7 @@ resource "aws_instance" "Altschool1" {
 # creating instance 2
 
  resource "aws_instance" "Altschool2" {
-  ami             = "ami-01b8d743224353ffe"
+  ami             = "ami-0aa7d40eeae50c9a9"
   instance_type   = "t2.micro"
   key_name        = "root-server2-london"
   security_groups = [aws_security_group.Altschool-security-grp-rule.id]
@@ -203,7 +203,7 @@ resource "aws_instance" "Altschool1" {
 # creating instance 3
 
 resource "aws_instance" "Altschool3" {
-  ami             = "ami-01b8d743224353ffe"
+  ami             = "ami-0aa7d40eeae50c9a9"
   instance_type   = "t2.micro"
   key_name        = "root-server2-london"
   security_groups = [aws_security_group.Altschool-security-grp-rule.id]
