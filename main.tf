@@ -71,7 +71,7 @@ resource "aws_subnet" "Altschool-project-public-subnet2" {
 resource "aws_network_acl" "Altschool-network_acl" {
   vpc_id     = aws_vpc.Altschool-project-vpc.id
   subnet_ids = [aws_subnet.Altschool-project-public-subnet1.id, aws_subnet.Altschool-project-public-subnet2.id]
-  
+
   ingress {
     rule_no    = 100
     protocol   = "-1"
@@ -108,7 +108,7 @@ resource "aws_security_group" "Altschool-load-balancer-sg" {
     to_port     = 443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
-    
+
   }
   egress {
     from_port   = 80
@@ -124,20 +124,20 @@ resource "aws_security_group" "Altschool-security-grp-rule" {
   name        = "allow_ssh_http_https"
   description = "Allow SSH, HTTP and HTTPS inbound traffic for private instances"
   vpc_id      = aws_vpc.Altschool-project-vpc.id
- ingress {
-    description = "HTTP"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+  ingress {
+    description     = "HTTP"
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
+    cidr_blocks     = ["0.0.0.0/0"]
     security_groups = [aws_security_group.Altschool-load-balancer-sg.id]
   }
- ingress {
-    description = "HTTPS"
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+  ingress {
+    description     = "HTTPS"
+    from_port       = 443
+    to_port         = 443
+    protocol        = "tcp"
+    cidr_blocks     = ["0.0.0.0/0"]
     security_groups = [aws_security_group.Altschool-load-balancer-sg.id]
   }
   ingress {
@@ -146,14 +146,14 @@ resource "aws_security_group" "Altschool-security-grp-rule" {
     to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
-    
+
   }
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
-   
+
   }
   tags = {
     Name = "Altschool-security-grp-rule"
@@ -163,11 +163,11 @@ resource "aws_security_group" "Altschool-security-grp-rule" {
 # creating instance 1
 
 resource "aws_instance" "Altschool1" {
-  ami             = "ami-01b8d743224353ffe"
-  instance_type   = "t2.micro"
-  key_name        = "root-server2-london"
-  security_groups = [aws_security_group.Altschool-security-grp-rule.id]
-  subnet_id       = aws_subnet.Altschool-project-public-subnet1.id
+  ami               = "ami-01b8d743224353ffe"
+  instance_type     = "t2.micro"
+  key_name          = "root-server2-london"
+  security_groups   = [aws_security_group.Altschool-security-grp-rule.id]
+  subnet_id         = aws_subnet.Altschool-project-public-subnet1.id
   availability_zone = "us-east-1"
   tags = {
     Name   = "Altschool-1"
@@ -177,12 +177,12 @@ resource "aws_instance" "Altschool1" {
 
 # creating instance 2
 
- resource "aws_instance" "Altschool2" {
-  ami             = "ami-01b8d743224353ffe"
-  instance_type   = "t2.micro"
-  key_name        = "root-server2-london"
-  security_groups = [aws_security_group.Altschool-security-grp-rule.id]
-  subnet_id       = aws_subnet.Altschool-project-public-subnet2.id
+resource "aws_instance" "Altschool2" {
+  ami               = "ami-01b8d743224353ffe"
+  instance_type     = "t2.micro"
+  key_name          = "root-server2-london"
+  security_groups   = [aws_security_group.Altschool-security-grp-rule.id]
+  subnet_id         = aws_subnet.Altschool-project-public-subnet2.id
   availability_zone = "us-east-1"
   tags = {
     Name   = "Altschool-2"
@@ -193,11 +193,11 @@ resource "aws_instance" "Altschool1" {
 # creating instance 3
 
 resource "aws_instance" "Altschool3" {
-  ami             = "ami-01b8d743224353ffe"
-  instance_type   = "t2.micro"
-  key_name        = "root-server2-london"
-  security_groups = [aws_security_group.Altschool-security-grp-rule.id]
-  subnet_id       = aws_subnet.Altschool-project-public-subnet1.id
+  ami               = "ami-01b8d743224353ffe"
+  instance_type     = "t2.micro"
+  key_name          = "root-server2-london"
+  security_groups   = [aws_security_group.Altschool-security-grp-rule.id]
+  subnet_id         = aws_subnet.Altschool-project-public-subnet1.id
   availability_zone = "us-east-1"
   tags = {
     Name   = "Altschool-3"
@@ -208,7 +208,7 @@ resource "aws_instance" "Altschool3" {
 # Create a file to store the IP addresses of the instances
 
 resource "local_file" "Ip_address" {
-  filename = "/Projects/terraform/host-inventory" 
+  filename = "/Projects/terraform/host-inventory"
   content  = <<EOT
 ${aws_instance.Altschool1.public_ip}
 ${aws_instance.Altschool2.public_ip}
@@ -224,7 +224,7 @@ resource "aws_lb" "Altschool-load-balancer" {
   load_balancer_type = "application"
   security_groups    = [aws_security_group.Altschool-load-balancer-sg.id]
   subnets            = [aws_subnet.Altschool-project-public-subnet1.id, aws_subnet.Altschool-project-public-subnet2.id]
-  
+
   #enable_cross_zone_load_balancing = true
   enable_deletion_protection = false
   depends_on                 = [aws_instance.Altschool1, aws_instance.Altschool2, aws_instance.Altschool3]
@@ -233,11 +233,11 @@ resource "aws_lb" "Altschool-load-balancer" {
 # Create the target group
 
 resource "aws_lb_target_group" "Altschool-target-group" {
-  name     = "Altschool-target-group"
+  name        = "Altschool-target-group"
   target_type = "instance"
-  port     = 80
-  protocol = "HTTP"
-  vpc_id   = aws_vpc.Altschool-project-vpc.id
+  port        = 80
+  protocol    = "HTTP"
+  vpc_id      = aws_vpc.Altschool-project-vpc.id
   health_check {
     path                = "/"
     protocol            = "HTTP"
@@ -282,7 +282,7 @@ resource "aws_lb_target_group_attachment" "Altschool-target-group-attachment1" {
   target_id        = aws_instance.Altschool1.id
   port             = 80
 }
- 
+
 resource "aws_lb_target_group_attachment" "Altschool-target-group-attachment2" {
   target_group_arn = aws_lb_target_group.Altschool-target-group.arn
   target_id        = aws_instance.Altschool2.id
@@ -291,6 +291,6 @@ resource "aws_lb_target_group_attachment" "Altschool-target-group-attachment2" {
 resource "aws_lb_target_group_attachment" "Altschool-target-group-attachment3" {
   target_group_arn = aws_lb_target_group.Altschool-target-group.arn
   target_id        = aws_instance.Altschool3.id
-  port             = 80 
-  
-  }
+  port             = 80
+
+}
