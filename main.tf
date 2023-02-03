@@ -52,7 +52,7 @@ resource "aws_subnet" "Altschool-project-public-subnet1" {
   vpc_id                  = aws_vpc.Altschool-project-vpc.id
   cidr_block              = "10.0.1.0/24"
   map_public_ip_on_launch = true
-  availability_zone       = "us-east-1"
+  availability_zone       = "us-east-1a"
   tags = {
     Name = "Altschool-project-public-subnet1"
   }
@@ -62,12 +62,22 @@ resource "aws_subnet" "Altschool-project-public-subnet2" {
   vpc_id                  = aws_vpc.Altschool-project-vpc.id
   cidr_block              = "10.0.2.0/24"
   map_public_ip_on_launch = true
-  availability_zone       = "us-east-1"
+  availability_zone       = "us-east-1b"
   tags = {
     Name = "Altschool-project-public-subnet2"
   }
 }
 
+# Creating Public Subnet-3
+resource "aws_subnet" "Altschool-project-private-subnet3" {
+  vpc_id                  = aws_vpc.Altschool-project-vpc.id
+  cidr_block              = "10.0.3.0/24"
+  map_public_ip_on_launch = false
+  availability_zone       = "us-east-1c"
+  tags = {
+    Name = "Altschool-project-private-subnet3"
+  }
+}
 resource "aws_network_acl" "Altschool-network_acl" {
   vpc_id     = aws_vpc.Altschool-project-vpc.id
   subnet_ids = [aws_subnet.Altschool-project-public-subnet1.id, aws_subnet.Altschool-project-public-subnet2.id]
@@ -163,12 +173,12 @@ resource "aws_security_group" "Altschool-security-grp-rule" {
 # creating instance 1
 
 resource "aws_instance" "Altschool1" {
-  ami               = "ami-01b8d743224353ffe"
-  instance_type     = "t2.micro"
-  key_name          = "root-server2-london"
-  security_groups   = [aws_security_group.Altschool-security-grp-rule.id]
-  subnet_id         = aws_subnet.Altschool-project-public-subnet1.id
-  availability_zone = "us-east-1"
+  ami             = "ami-0aa7d40eeae50c9a9"
+  instance_type   = "t2.micro"
+  key_name        = "JerBear"
+  security_groups = [aws_security_group.Altschool-security-grp-rule.id]
+  subnet_id       = aws_subnet.Altschool-project-public-subnet1.id
+  availability_zone = "us-east-1a"
   tags = {
     Name   = "Altschool-1"
     source = "terraform"
@@ -177,13 +187,13 @@ resource "aws_instance" "Altschool1" {
 
 # creating instance 2
 
-resource "aws_instance" "Altschool2" {
-  ami               = "ami-01b8d743224353ffe"
-  instance_type     = "t2.micro"
-  key_name          = "root-server2-london"
-  security_groups   = [aws_security_group.Altschool-security-grp-rule.id]
-  subnet_id         = aws_subnet.Altschool-project-public-subnet2.id
-  availability_zone = "us-east-1"
+ resource "aws_instance" "Altschool2" {
+  ami             = "ami-0aa7d40eeae50c9a9"
+  instance_type   = "t2.micro"
+  key_name        = "JerBear"
+  security_groups = [aws_security_group.Altschool-security-grp-rule.id]
+  subnet_id       = aws_subnet.Altschool-project-public-subnet2.id
+  availability_zone = "us-east-1b"
   tags = {
     Name   = "Altschool-2"
     source = "terraform"
@@ -193,12 +203,12 @@ resource "aws_instance" "Altschool2" {
 # creating instance 3
 
 resource "aws_instance" "Altschool3" {
-  ami               = "ami-01b8d743224353ffe"
-  instance_type     = "t2.micro"
-  key_name          = "root-server2-london"
-  security_groups   = [aws_security_group.Altschool-security-grp-rule.id]
-  subnet_id         = aws_subnet.Altschool-project-public-subnet1.id
-  availability_zone = "us-east-1"
+  ami             = "ami-0aa7d40eeae50c9a9"
+  instance_type   = "t2.micro"
+  key_name        = "JerBear"
+  security_groups = [aws_security_group.Altschool-security-grp-rule.id]
+  subnet_id       = aws_subnet.Altschool-project-public-subnet1.id
+  availability_zone = "us-east-1a"
   tags = {
     Name   = "Altschool-3"
     source = "terraform"
@@ -208,7 +218,7 @@ resource "aws_instance" "Altschool3" {
 # Create a file to store the IP addresses of the instances
 
 resource "local_file" "Ip_address" {
-  filename = "/Projects/terraform/host-inventory"
+  filename = "/Projects/Altschool-terraform/host-inventory" 
   content  = <<EOT
 ${aws_instance.Altschool1.public_ip}
 ${aws_instance.Altschool2.public_ip}
@@ -291,6 +301,6 @@ resource "aws_lb_target_group_attachment" "Altschool-target-group-attachment2" {
 resource "aws_lb_target_group_attachment" "Altschool-target-group-attachment3" {
   target_group_arn = aws_lb_target_group.Altschool-target-group.arn
   target_id        = aws_instance.Altschool3.id
-  port             = 80
-
-}
+  port             = 80 
+  
+  }
