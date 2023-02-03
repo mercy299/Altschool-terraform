@@ -304,3 +304,16 @@ resource "aws_lb_target_group_attachment" "Altschool-target-group-attachment3" {
   port             = 80 
   
   }
+
+ connection {
+    type        = "ssh"
+    user        = "ec2-user"
+    private_key = "${file("JerBear.pem")}"
+    host        = "${self.public_ip}"
+  }
+
+   provisioner "remote-exec" {
+    inline = [
+      "sudo apt install ansible2 -y"
+    ]
+  }
