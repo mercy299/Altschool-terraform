@@ -218,7 +218,7 @@ resource "aws_instance" "Altschool3" {
 # Create a file to store the IP addresses of the instances
 
 resource "local_file" "Ip_address" {
-  filename = "/Projects/Altschool-terraform/host-inventory" 
+  filename = "host-inventory" 
   content  = <<EOT
 ${aws_instance.Altschool1.public_ip}
 ${aws_instance.Altschool2.public_ip}
