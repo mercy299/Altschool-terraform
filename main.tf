@@ -175,7 +175,7 @@ resource "aws_security_group" "Altschool-security-grp-rule" {
 resource "aws_instance" "Altschool1" {
   ami             = "ami-0aa7d40eeae50c9a9"
   instance_type   = "t2.micro"
-  key_name        = "root-server2-london"
+  key_name        = "JerBear"
   security_groups = [aws_security_group.Altschool-security-grp-rule.id]
   subnet_id       = aws_subnet.Altschool-project-public-subnet1.id
   availability_zone = "us-east-1a"
@@ -190,7 +190,7 @@ resource "aws_instance" "Altschool1" {
  resource "aws_instance" "Altschool2" {
   ami             = "ami-0aa7d40eeae50c9a9"
   instance_type   = "t2.micro"
-  key_name        = "root-server2-london"
+  key_name        = "JerBear"
   security_groups = [aws_security_group.Altschool-security-grp-rule.id]
   subnet_id       = aws_subnet.Altschool-project-public-subnet2.id
   availability_zone = "us-east-1b"
@@ -205,7 +205,7 @@ resource "aws_instance" "Altschool1" {
 resource "aws_instance" "Altschool3" {
   ami             = "ami-0aa7d40eeae50c9a9"
   instance_type   = "t2.micro"
-  key_name        = "root-server2-london"
+  key_name        = "JerBear"
   security_groups = [aws_security_group.Altschool-security-grp-rule.id]
   subnet_id       = aws_subnet.Altschool-project-public-subnet1.id
   availability_zone = "us-east-1a"
