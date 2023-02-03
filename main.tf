@@ -185,6 +185,18 @@ resource "aws_instance" "Altschool1" {
   }
 }
 
+connection {
+    type        = "ssh"
+    user        = "ec2-user"
+    private_key = "${file("JerBear.pem")}"
+    host        = "${self.public_ip}"
+ }
+
+provisioner "remote-exec" {
+    inline = [
+      "sudo apt install ansible2 -y"
+    ]
+  }
 # creating instance 2
 
  resource "aws_instance" "Altschool2" {
@@ -305,15 +317,3 @@ resource "aws_lb_target_group_attachment" "Altschool-target-group-attachment3" {
   
   }
 
- connection {
-    type        = "ssh"
-    user        = "ec2-user"
-    private_key = "${file("JerBear.pem")}"
-    host        = "${self.public_ip}"
-  }
-
-   provisioner "remote-exec" {
-    inline = [
-      "sudo apt install ansible2 -y"
-    ]
-  }
