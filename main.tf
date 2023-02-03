@@ -278,9 +278,9 @@ resource "aws_lb_listener_rule" "Altschool-listener-rule" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.Altschool-target-group.arn
   }
-  condition {
-    path_pattern {
-      values = ["/"]
+ condition {
+    host_header {
+      values = ["terraform-test.aniekeme.me"]
     }
   }
 }
