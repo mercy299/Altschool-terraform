@@ -5,11 +5,11 @@ output "vpc_id" {
 }
 
 output "public_ip1" {
-  value       = aws_instance.AltschoolInstance1.public_ip
+  value       = aws_instance.AltschoolInstance1.private_ip
   description = "my 1st server public ip"
 }
 output "public_ip2" {
-  value       = aws_instance.AltschoolInstance2.public_ip
+  value       = aws_instance.AltschoolInstance2.private_ip
   description = "my 2nd server public ip"
 }
 output "public_ip3" {
