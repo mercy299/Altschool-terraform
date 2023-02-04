@@ -2,6 +2,10 @@ provider "aws" {
   region = "us-east-1"
 }
 
+variable "AWS_PRIVATE_KEY" {
+  type = string
+}
+
 
 # Creating VPC
 resource "aws_vpc" "Altschool-project-vpc" {
@@ -216,7 +220,7 @@ resource "aws_instance" "BastionHost" {
   connection {
     type        = "ssh"
     user        = "ec2-user"
-    private_key = "${file("JerBear.pem")}"
+    private_key = "${var.AWS_PRIVATE_KEY}"
     host        = "${self.public_ip}"
   }
   provisioner "remote-exec" {
