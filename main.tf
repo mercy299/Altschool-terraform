@@ -68,14 +68,14 @@ resource "aws_subnet" "Altschool-project-public-subnet2" {
   }
 }
 
-# Creating Public Subnet-3
-resource "aws_subnet" "Altschool-project-private-subnet3" {
+# Creating Private Subnet 
+resource "aws_subnet" "Altschool-project-private-subnet" {
   vpc_id                  = aws_vpc.Altschool-project-vpc.id
   cidr_block              = "10.0.3.0/24"
   map_public_ip_on_launch = false
   availability_zone       = "us-east-1c"
   tags = {
-    Name = "Altschool-project-private-subnet3"
+    Name = "Altschool-project-private-subnet"
   }
 }
 resource "aws_network_acl" "Altschool-network_acl" {
@@ -172,45 +172,44 @@ resource "aws_security_group" "Altschool-security-grp-rule" {
 
 # creating instance 1
 
-resource "aws_instance" "Altschool1" {
+resource "aws_instance" "AltschoolInstance1" {
   ami             = "ami-0aa7d40eeae50c9a9"
   instance_type   = "t2.micro"
   key_name        = "JerBear"
   security_groups = [aws_security_group.Altschool-security-grp-rule.id]
-  subnet_id       = aws_subnet.Altschool-project-public-subnet1.id
+  subnet_id       = aws_subnet.Altschool-project-private-subnet.id
   availability_zone = "us-east-1a"
   tags = {
-    Name   = "Altschool-1"
+    Name   = "Altschool-instance-1"
     source = "terraform"
   }
 }
 
 # creating instance 2
 
- resource "aws_instance" "Altschool2" {
+ resource "aws_instance" "AltschoolInstance2" {
   ami             = "ami-0aa7d40eeae50c9a9"
   instance_type   = "t2.micro"
   key_name        = "JerBear"
   security_groups = [aws_security_group.Altschool-security-grp-rule.id]
-  subnet_id       = aws_subnet.Altschool-project-public-subnet2.id
+  subnet_id       = aws_subnet.Altschool-project-private-subnet.id
   availability_zone = "us-east-1b"
   tags = {
-    Name   = "Altschool-2"
+    Name   = "Altschool-instance-2"
     source = "terraform"
   }
 }
 
 # creating instance 3
-
-resource "aws_instance" "Altschool3" {
+resource "aws_instance" "BastionHost" {
   ami             = "ami-0aa7d40eeae50c9a9"
   instance_type   = "t2.micro"
   key_name        = "JerBear"
   security_groups = [aws_security_group.Altschool-security-grp-rule.id]
-  subnet_id       = aws_subnet.Altschool-project-public-subnet1.id
+  subnet_id       = aws_subnet.Altschool-project-public-subnet.id
   availability_zone = "us-east-1a"
   tags = {
-    Name   = "Altschool-3"
+    Name   = "BastionHost"
     source = "terraform"
   }
 }
@@ -220,9 +219,9 @@ resource "aws_instance" "Altschool3" {
 resource "local_file" "Ip_address" {
   filename = "host-inventory" 
   content  = <<EOT
-${aws_instance.Altschool1.public_ip}
-${aws_instance.Altschool2.public_ip}
-${aws_instance.Altschool3.public_ip}
+${aws_instance.AltschoolInstance1.public_ip}
+${aws_instance.AltschoolInstance2.public_ip}
+${aws_instance.BastionHost.public_ip}
   EOT
 }
 
@@ -237,7 +236,7 @@ resource "aws_lb" "Altschool-load-balancer" {
 
   #enable_cross_zone_load_balancing = true
   enable_deletion_protection = false
-  depends_on                 = [aws_instance.Altschool1, aws_instance.Altschool2, aws_instance.Altschool3]
+  depends_on                 = [aws_instance.AltschoolInstance1, aws_instance.AltschoolInstance2, aws_instance.BastionHost]
 }
 
 # Create the target group
@@ -286,22 +285,21 @@ resource "aws_lb_listener_rule" "Altschool-listener-rule" {
 }
 
 # Attach the target group to the load balancer
-
 resource "aws_lb_target_group_attachment" "Altschool-target-group-attachment1" {
   target_group_arn = aws_lb_target_group.Altschool-target-group.arn
-  target_id        = aws_instance.Altschool1.id
+  target_id        = aws_instance.AltschoolInstance1.id
   port             = 80
 }
 
 resource "aws_lb_target_group_attachment" "Altschool-target-group-attachment2" {
   target_group_arn = aws_lb_target_group.Altschool-target-group.arn
-  target_id        = aws_instance.Altschool2.id
+  target_id        = aws_instance.AltschoolInstance2.id
   port             = 80
 }
-resource "aws_lb_target_group_attachment" "Altschool-target-group-attachment3" {
-  target_group_arn = aws_lb_target_group.Altschool-target-group.arn
-  target_id        = aws_instance.Altschool3.id
-  port             = 80 
-  
-  }
 
+# resource "aws_lb_target_group_attachment" "Altschool-target-group-attachment3" {
+#   target_group_arn = aws_lb_target_group.Altschool-target-group.arn
+#   target_id        = aws_instance.BastionHost.id
+#   port             = 80 
+  
+#   }
