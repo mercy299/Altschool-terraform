@@ -206,7 +206,7 @@ resource "aws_instance" "BastionHost" {
   instance_type   = "t2.micro"
   key_name        = "JerBear"
   security_groups = [aws_security_group.Altschool-security-grp-rule.id]
-  subnet_id       = aws_subnet.Altschool-project-public-subnet.id
+  subnet_id       = aws_subnet.Altschool-project-public-subnet1.id
   availability_zone = "us-east-1a"
   tags = {
     Name   = "BastionHost"
