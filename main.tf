@@ -73,7 +73,7 @@ resource "aws_subnet" "Altschool-project-private-subnet" {
   vpc_id                  = aws_vpc.Altschool-project-vpc.id
   cidr_block              = "10.0.3.0/24"
   map_public_ip_on_launch = false
-  availability_zone       = "us-east-1c"
+  availability_zone       = "us-east-1a"
   tags = {
     Name = "Altschool-project-private-subnet"
   }
