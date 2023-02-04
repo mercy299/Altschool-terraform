@@ -193,7 +193,7 @@ resource "aws_instance" "AltschoolInstance1" {
   key_name        = "JerBear"
   security_groups = [aws_security_group.Altschool-security-grp-rule.id]
   subnet_id       = aws_subnet.Altschool-project-private-subnet.id
-  availability_zone = "us-east-1b"
+  availability_zone = "us-east-1a"
   tags = {
     Name   = "Altschool-instance-2"
     source = "terraform"
