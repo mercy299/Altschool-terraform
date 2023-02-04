@@ -216,8 +216,8 @@ resource "aws_instance" "BastionHost" {
   connection {
     type        = "ssh"
     user        = "ec2-user"
-    private_key = file("JerBear.pem")
-    host        = self.public_ip
+    private_key = "${file("JerBear.pem")}"
+    host        = "${self.public_ip}"
   }
   provisioner "remote-exec" {
     inline = [
