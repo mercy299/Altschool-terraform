@@ -170,9 +170,9 @@ resource "aws_security_group" "Altschool-security-grp-rule" {
 
   }
   egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+    from_port   = "all"
+    to_port     = "all"
+    protocol    = "all"
     cidr_blocks = ["0.0.0.0/0"]
 
   }
