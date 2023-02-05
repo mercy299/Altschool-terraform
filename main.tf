@@ -10,6 +10,10 @@ variable "GIT_TOKEN" {
   type = string
 }
 
+variable "GIT_USER" {
+  type = string
+}
+
 # Creating VPC
 resource "aws_vpc" "Altschool-project-vpc" {
   cidr_block           = "10.0.0.0/16"
