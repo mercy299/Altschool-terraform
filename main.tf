@@ -132,9 +132,9 @@ resource "aws_security_group" "Altschool-load-balancer-sg" {
 
   }
   egress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
@@ -170,9 +170,9 @@ resource "aws_security_group" "Altschool-security-grp-rule" {
 
   }
   egress {
-    from_port   = "all"
-    to_port     = "all"
-    protocol    = "all"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
 
   }
