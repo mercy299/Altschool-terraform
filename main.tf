@@ -218,7 +218,7 @@ resource "aws_instance" "Altschool3" {
     source = "terraform"
   }
   provisioner "local-exec" {
-    command = "cd ansible-setup; ansible-playbook -i host-inventory ansible.yml"
+    command = "cd /tmp/altschool-terraform/ansible-setup && ansible-playbook -i host-inventory ansible.yml -v"
   }
 }
 
