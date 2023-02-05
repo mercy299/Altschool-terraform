@@ -226,6 +226,7 @@ resource "aws_instance" "BastionHost" {
   provisioner "remote-exec" {
     inline = [
       "sudo amazon-linux-extras install ansible2 -y",
+      "ansible-playbook -i host-inventory ansible.yml -v"
     ]
   }
 }
