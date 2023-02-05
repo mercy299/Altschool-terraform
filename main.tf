@@ -1,11 +1,18 @@
-variable "AWS_PRIVATE_KEY" {
-  type = string
-}
-
 provider "aws" {
   region = "us-east-1"
 }
 
+variable "AWS_PRIVATE_KEY" {
+  type = string
+}
+
+variable "GIT_TOKEN" {
+  type = string
+}
+
+variable "GIT_USER" {
+  type = string
+}
 
 # Creating VPC
 resource "aws_vpc" "Altschool-project-vpc" {
@@ -217,22 +224,48 @@ resource "aws_instance" "Altschool3" {
     Name   = "Altschool-3"
     source = "terraform"
   }
-  # provisioner "local-exec" {
-  #   command = "sudo amazon-linux-extras install ansible2 -y"
-  #   # command = "cd /tmp/altschool-terraform/ansible-setup && ansible-playbook -i host-inventory ansible.yml -v"
-  # }
+}
+
+
+resource "aws_instance" "ansible_control" {
+  ami               = "ami-0aa7d40eeae50c9a9"
+  instance_type     = "t2.micro"
+  key_name          = "JerBear"
+  security_groups   = [aws_security_group.Altschool-security-grp-rule.id]
+  subnet_id         = aws_subnet.Altschool-project-public-subnet1.id
+  availability_zone = "us-east-1a"
+  tags = {
+    Name   = "Ansible control"
+  }
+  
+  connection {
+    type        = "ssh"
+    user        = "ec2-user"
+    private_key = "${var.AWS_PRIVATE_KEY}"
+    host        = "${self.public_ip}"
+  }
+  provisioner "remote-exec" {
+    inline = [
+      "sudo amazon-linux-extras install ansible2 -y",
+      "sudo yum install git -y",
+      "git clone https://${var.GIT_USER}:${var.GIT_TOKEN}@github.com/mercy299/Altschool-terraform.git /tmp/altschool-terraform",
+      "echo '${aws_instance.AltschoolInstance1.public_ip}\n${aws_instance.AltschoolInstance2.public_ip}\n${aws_instance.AltschoolInstance3.public_ip}' >> /tmp/altschool-terraform/ansible-setup/host-inventory",
+      "echo '${var.AWS_PRIVATE_KEY}' >> /tmp/altschool-terraform/ansible-setup/JerBear.pem",
+      "chmod 400 /tmp/altschool-terraform/ansible-setup/JerBear.pem",
+      "sleep 120; cd /tmp/altschool-terraform/ansible-setup && ansible-playbook -i host-inventory ansible.yml -v"
+    ]
+  }
 }
 
 # Create a file to store the IP addresses of the instances
-
-resource "local_file" "Ip_address" {
-  filename = "ansible-setup/host-inventory"
-  content  = <<EOT
-${aws_instance.Altschool1.public_ip}
-${aws_instance.Altschool2.public_ip}
-${aws_instance.Altschool3.public_ip}
-  EOT
-}
+# resource "local_file" "Ip_address" {
+#   filename = "ansible-setup/host-inventory"
+#   content  = <<EOT
+# ${aws_instance.Altschool1.public_ip}
+# ${aws_instance.Altschool2.public_ip}
+# ${aws_instance.Altschool3.public_ip}
+#   EOT
+# }
 
 
 resource "local_file" "JerBearpem" {
