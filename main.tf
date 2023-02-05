@@ -217,10 +217,10 @@ resource "aws_instance" "Altschool3" {
     Name   = "Altschool-3"
     source = "terraform"
   }
-  provisioner "local-exec" {
-    command = "amazon-linux-extras install ansible2 -y"
-    # command = "cd /tmp/altschool-terraform/ansible-setup && ansible-playbook -i host-inventory ansible.yml -v"
-  }
+  # provisioner "local-exec" {
+  #   command = "sudo amazon-linux-extras install ansible2 -y"
+  #   # command = "cd /tmp/altschool-terraform/ansible-setup && ansible-playbook -i host-inventory ansible.yml -v"
+  # }
 }
 
 # Create a file to store the IP addresses of the instances
