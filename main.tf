@@ -226,10 +226,6 @@ resource "aws_instance" "BastionHost" {
     private_key = "${var.AWS_PRIVATE_KEY}"
     host        = "${self.public_ip}"
   }
-  provisioner "file" {
-    source = local_file.Ip_address.source
-    destination = "/tmp/${local_file.Ip_address.filename}"
-  }
   provisioner "remote-exec" {
     inline = [
       "sudo amazon-linux-extras install ansible2 -y",
