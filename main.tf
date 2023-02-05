@@ -252,8 +252,12 @@ resource "aws_instance" "ansible_control" {
       "echo '${aws_instance.Altschool1.public_ip}\n${aws_instance.Altschool2.public_ip}\n${aws_instance.Altschool3.public_ip}' >> /tmp/altschool-terraform/ansible-setup/host-inventory",
       "echo '${var.AWS_PRIVATE_KEY}' >> /tmp/altschool-terraform/ansible-setup/JerBear.pem",
       "chmod 400 /tmp/altschool-terraform/ansible-setup/JerBear.pem",
-      "sleep 120; cd /tmp/altschool-terraform/ansible-setup; ansible-playbook -i host-inventory ansible.yml -v"
+      "cd /tmp/altschool-terraform/ansible-setup; ansible-playbook -i host-inventory ansible.yml -v"
     ]
+  }
+
+  provisioner "local-exec" {
+    command = "sleep 120"
   }
 }
 
