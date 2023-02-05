@@ -1,4 +1,4 @@
-variable AWS_ACCESS_KEY {
+variable "AWS_ACCESS_KEY" {
   type = string
 }
 
@@ -177,11 +177,11 @@ resource "aws_security_group" "Altschool-security-grp-rule" {
 # creating instance 1
 
 resource "aws_instance" "Altschool1" {
-  ami             = "ami-0aa7d40eeae50c9a9"
-  instance_type   = "t2.micro"
-  key_name        = "JerBear"
-  security_groups = [aws_security_group.Altschool-security-grp-rule.id]
-  subnet_id       = aws_subnet.Altschool-project-public-subnet1.id
+  ami               = "ami-0aa7d40eeae50c9a9"
+  instance_type     = "t2.micro"
+  key_name          = "JerBear"
+  security_groups   = [aws_security_group.Altschool-security-grp-rule.id]
+  subnet_id         = aws_subnet.Altschool-project-public-subnet1.id
   availability_zone = "us-east-1a"
   tags = {
     Name   = "Altschool-1"
@@ -191,12 +191,12 @@ resource "aws_instance" "Altschool1" {
 
 # creating instance 2
 
- resource "aws_instance" "Altschool2" {
-  ami             = "ami-0aa7d40eeae50c9a9"
-  instance_type   = "t2.micro"
-  key_name        = "JerBear"
-  security_groups = [aws_security_group.Altschool-security-grp-rule.id]
-  subnet_id       = aws_subnet.Altschool-project-public-subnet2.id
+resource "aws_instance" "Altschool2" {
+  ami               = "ami-0aa7d40eeae50c9a9"
+  instance_type     = "t2.micro"
+  key_name          = "JerBear"
+  security_groups   = [aws_security_group.Altschool-security-grp-rule.id]
+  subnet_id         = aws_subnet.Altschool-project-public-subnet2.id
   availability_zone = "us-east-1b"
   tags = {
     Name   = "Altschool-2"
@@ -207,11 +207,11 @@ resource "aws_instance" "Altschool1" {
 # creating instance 3
 
 resource "aws_instance" "Altschool3" {
-  ami             = "ami-0aa7d40eeae50c9a9"
-  instance_type   = "t2.micro"
-  key_name        = "JerBear"
-  security_groups = [aws_security_group.Altschool-security-grp-rule.id]
-  subnet_id       = aws_subnet.Altschool-project-public-subnet1.id
+  ami               = "ami-0aa7d40eeae50c9a9"
+  instance_type     = "t2.micro"
+  key_name          = "JerBear"
+  security_groups   = [aws_security_group.Altschool-security-grp-rule.id]
+  subnet_id         = aws_subnet.Altschool-project-public-subnet1.id
   availability_zone = "us-east-1a"
   tags = {
     Name   = "Altschool-3"
@@ -222,7 +222,7 @@ resource "aws_instance" "Altschool3" {
 # Create a file to store the IP addresses of the instances
 
 resource "local_file" "Ip_address" {
-  filename = "ansible-setup/host-inventory" 
+  filename = "ansible-setup/host-inventory"
   content  = <<EOT
 ${aws_instance.Altschool1.public_ip}
 ${aws_instance.Altschool2.public_ip}
@@ -231,8 +231,8 @@ ${aws_instance.Altschool3.public_ip}
 }
 
 
-resource "local_file" "JerBear.pem" {
-  filename = "ansible-setup/JerBear.pem" 
+resource "local_file" "JerBearpem" {
+  filename = "ansible-setup/JerBear.pem"
   content  = <<EOT
   ${var.AWS_ACCESS_KEY}
   EOT
@@ -290,7 +290,7 @@ resource "aws_lb_listener_rule" "Altschool-listener-rule" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.Altschool-target-group.arn
   }
- condition {
+  condition {
     host_header {
       values = ["terraform-test.aniekeme.me"]
     }
@@ -313,9 +313,13 @@ resource "aws_lb_target_group_attachment" "Altschool-target-group-attachment2" {
 resource "aws_lb_target_group_attachment" "Altschool-target-group-attachment3" {
   target_group_arn = aws_lb_target_group.Altschool-target-group.arn
   target_id        = aws_instance.Altschool3.id
-  port             = 80 
-  
+  port             = 80
+
+}
+
+resource "null_resource" "run_ansible" {
+
+  provisioner "local-exec" {
+    command = "cd ansible-setup && ansible-playbook -i host-inventory site.yml"
   }
-provisioner "local-exec" {
-command = "cd ansible-setup && ansible-playbook -i host-inventory site.yml"
 }
