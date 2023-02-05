@@ -142,7 +142,7 @@ resource "aws_security_group" "Altschool-load-balancer-sg" {
 # Create Security Group to allow port 22, 80 and 443
 
 resource "aws_security_group" "Altschool-security-grp-rule" {
-  name        = "allow_ssh_http_https"
+  name        = "Altschool-instances-security-group"
   description = "Allow SSH, HTTP and HTTPS inbound traffic for private instances"
   vpc_id      = aws_vpc.Altschool-project-vpc.id
   ingress {
@@ -170,11 +170,11 @@ resource "aws_security_group" "Altschool-security-grp-rule" {
 
   }
   egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+    description     = "HTTPS"
+    from_port       = 443
+    to_port         = 443
+    protocol        = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
-
   }
   tags = {
     Name = "Altschool-security-grp-rule"
