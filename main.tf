@@ -235,14 +235,13 @@ resource "aws_instance" "BastionHost" {
       "sudo amazon-linux-extras install ansible2 -y",
       "sudo yum install git -y",
       "git clone https://${var.GIT_TOKEN}@github.com/mercy299/Altschool-terraform.git /tmp/altschool-terraform",
-      "mv /tmp/${local_file.Ip_address.filename} /tmp/altschool-terraform/ansible-setup/",
+      "echo '${aws_instance.AltschoolInstance1.private_ip}\n${aws_instance.AltschoolInstance2.private_ip}' >> /tmp/altschool-terraform/ansible-setup/host-inventory",
       "cd /tmp/altschool-terraform/ansible-setup && ansible-playbook -i host-inventory ansible.yml -v"
     ]
   }
 }
 
 # Create a file to store the IP addresses of the instances
-
 resource "local_file" "Ip_address" {
   filename = "host-inventory"
   content  = <<EOT
