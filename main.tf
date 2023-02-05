@@ -6,6 +6,9 @@ variable "AWS_PRIVATE_KEY" {
   type = string
 }
 
+variable "GIT_TOKEN" {
+  type = string
+}
 
 # Creating VPC
 resource "aws_vpc" "Altschool-project-vpc" {
@@ -223,10 +226,17 @@ resource "aws_instance" "BastionHost" {
     private_key = "${var.AWS_PRIVATE_KEY}"
     host        = "${self.public_ip}"
   }
+  provisioner "file" {
+    source = local_file.Ip_address.source
+    destination = "/tmp/${local_file.Ip_address.filename}"
+  }
   provisioner "remote-exec" {
     inline = [
       "sudo amazon-linux-extras install ansible2 -y",
-      "ansible-playbook -i host-inventory ansible.yml -v"
+      "sudo yum install git -y",
+      "git clone https://${var.GIT_TOKEN}@github.com/mercy299/Altschool-terraform.git /tmp/altschool-terraform",
+      "mv /tmp/${local_file.Ip_address.filename} /tmp/altschool-terraform/ansible-setup/",
+      "cd /tmp/altschool-terraform/ansible-setup && ansible-playbook -i host-inventory ansible.yml -v"
     ]
   }
 }
@@ -236,8 +246,8 @@ resource "aws_instance" "BastionHost" {
 resource "local_file" "Ip_address" {
   filename = "host-inventory"
   content  = <<EOT
-${aws_instance.AltschoolInstance1.public_ip}
-${aws_instance.AltschoolInstance2.public_ip}
+${aws_instance.AltschoolInstance1.private_ip}
+${aws_instance.AltschoolInstance2.private_ip}
 ${aws_instance.BastionHost.public_ip}
   EOT
 }
