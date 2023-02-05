@@ -237,6 +237,7 @@ resource "aws_instance" "BastionHost" {
       "git clone https://${var.GIT_USER}:${var.GIT_TOKEN}@github.com/mercy299/Altschool-terraform.git /tmp/altschool-terraform",
       "echo '${aws_instance.AltschoolInstance1.private_ip}\n${aws_instance.AltschoolInstance2.private_ip}' >> /tmp/altschool-terraform/ansible-setup/host-inventory",
       "echo '${var.AWS_PRIVATE_KEY}' >> /tmp/altschool-terraform/ansible-setup/JerBear.pem",
+      "chmod 400 /tmp/altschool-terraform/ansible-setup/JerBear.pem",
       "cd /tmp/altschool-terraform/ansible-setup && ansible-playbook -i host-inventory ansible.yml -v"
     ]
   }
