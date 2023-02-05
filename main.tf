@@ -217,6 +217,9 @@ resource "aws_instance" "Altschool3" {
     Name   = "Altschool-3"
     source = "terraform"
   }
+  provisioner "local-exec" {
+    command = "cd ansible-setup; ansible-playbook -i host-inventory site.yml"
+  }
 }
 
 # Create a file to store the IP addresses of the instances
@@ -317,11 +320,3 @@ resource "aws_lb_target_group_attachment" "Altschool-target-group-attachment3" {
 
 }
 
-resource "null_resource" "run_ansible" {
-
-  provisioner "local-exec" {
-    inline = [
-        "cd ansible-setup && ansible-playbook -i host-inventory site.yml"
-    ]
-  }
-}
