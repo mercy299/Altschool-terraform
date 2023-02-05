@@ -1,4 +1,4 @@
-variable "AWS_ACCESS_KEY" {
+variable "AWS_PRIVATE_KEY" {
   type = string
 }
 
@@ -234,7 +234,7 @@ ${aws_instance.Altschool3.public_ip}
 resource "local_file" "JerBearpem" {
   filename = "ansible-setup/JerBear.pem"
   content  = <<EOT
-  ${var.AWS_ACCESS_KEY}
+  ${var.AWS_PRIVATE_KEY}
   EOT
 }
 
