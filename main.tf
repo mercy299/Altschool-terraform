@@ -23,8 +23,21 @@ resource "aws_vpc" "Altschool-project-vpc" {
   }
 }
 
-# Create Internet Gateway
+# Create Elastic Ip
+resource "aws_eip" "private_elastic_ip" {
+  vpc = true
+}
 
+# Create Nat Gateway
+resource "aws_nat_gateway" "nat_gateway" {
+  allocation_id = aws_eip.private_elastic_ip.id
+  subnet_id = aws_subnet.Altschool-project-public-subnet1.id
+  tags = {
+    Name = "Nat Gateway"
+  }
+}
+
+# Create Internet Gateway
 resource "aws_internet_gateway" "Altschool_internet_gateway" {
   vpc_id = aws_vpc.Altschool-project-vpc.id
   tags = {
@@ -42,6 +55,21 @@ resource "aws_route_table" "Altschool-project-route-table-public" {
   tags = {
     Name = "Altschool-project-route-table-public"
   }
+}
+
+# Create route table for nat_gateway
+resource "aws_route_table" "private_route_table" {
+  vpc_id = aws_vpc.Altschool-project-vpc.id
+  route {
+    cidr_block = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.nat_gateway.id
+  }
+}
+
+# Connect private route table to private subnet
+resource "aws_route_table_association" "private_route_table_connection" {
+  subnet_id = aws_subnet.Altschool-project-private-subnet.id
+  route_table_id = aws_route_table.private_route_table.id
 }
 
 # Associating public subnet 1 with public route table
